@@ -6,18 +6,33 @@ import { usePathname } from 'next/navigation';
 import { Search, User, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SearchBar from '@/app/_components/search-bar';
-import ShoppingCart from './shopping-cart';
-import { Session } from '@/lib/session';
+import { Session, deleteSession } from '@/lib/session';
+import { useRouter } from 'next/navigation';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 interface HeaderProps {
   session: Session | null;
 }
 
 const Header: React.FC<HeaderProps> = ({ session }) => {
+  const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const pathname = usePathname();
+
+  const handleLogout = async () => {
+    await deleteSession();
+    router.refresh();
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -77,12 +92,23 @@ const Header: React.FC<HeaderProps> = ({ session }) => {
             </Button>
 
             {session ? (
-              <div>
-                {/* Cart */}
-                <ShoppingCart />
-                <span>{session.user.account}</span>
-                <Link href={'/api/auth/signout'}>Thoat</Link>
-              </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full p-0">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src="https://github.com/shadcn.png" alt={session.user.account} />
+                      <AvatarFallback>{session.user.account[0]?.toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem disabled>{session.user.account}</DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               <Link href="/auth/signin">
                 <Button variant="ghost" size="icon" className="relative cursor-pointer">
