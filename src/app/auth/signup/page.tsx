@@ -1,5 +1,5 @@
 'use client';
-import FormSignIn from './form-signin';
+import FormSignIn from './form-signup';
 
 export default function SignUpPage() {
   return (

@@ -7,13 +7,17 @@ import { Search, User, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SearchBar from '@/app/_components/search-bar';
 import ShoppingCart from './shopping-cart';
+import { Session } from '@/lib/session';
 
-const Header = () => {
+interface HeaderProps {
+  session: Session | null;
+}
+
+const Header: React.FC<HeaderProps> = ({ session }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const pathname = usePathname();
-  // const { cartItems } = useCart();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -72,15 +76,20 @@ const Header = () => {
               <Search className="h-5 w-5" />
             </Button>
 
-            {/* User */}
-            <Link href="/account">
-              <Button variant="ghost" size="icon" className="relative cursor-pointer">
-                <User className="h-5 w-5" />
-              </Button>
-            </Link>
-
-            {/* Cart */}
-            <ShoppingCart />
+            {session ? (
+              <div>
+                {/* Cart */}
+                <ShoppingCart />
+                <span>{session.user.account}</span>
+                <Link href={'/api/auth/signout'}>Thoat</Link>
+              </div>
+            ) : (
+              <Link href="/auth/signin">
+                <Button variant="ghost" size="icon" className="relative cursor-pointer">
+                  <User className="h-5 w-5" />
+                </Button>
+              </Link>
+            )}
 
             {/* Mobile menu button */}
             <Button

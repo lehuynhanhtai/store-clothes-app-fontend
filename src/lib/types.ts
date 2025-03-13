@@ -24,8 +24,8 @@ export const SignupFormSchema = z.object({
 });
 
 export const SignInFormSchema = z.object({
-  email: z.string().email({ message: 'Please enter a valid email address' }).trim(),
-  password: z.string().min(8, { message: 'Password must be at least 8 characters long' }).trim(),
+  account: z.string().trim(),
+  password: z.string().min(3, { message: 'Password must be at least 8 characters long' }).trim(),
 });
 
 export enum Role {
