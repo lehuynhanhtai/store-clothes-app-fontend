@@ -55,7 +55,9 @@ export async function signIn(state: FormState, formData: FormData): Promise<Form
     body: JSON.stringify(validateFields.data),
   });
 
-  if (response.ok) {
+  console.log(response);
+
+  if (response.ok === true) {
     const result = await response.json();
     // TODO: Create The Session For Authenticated User.
 
@@ -66,7 +68,6 @@ export async function signIn(state: FormState, formData: FormData): Promise<Form
       },
       accessToken: result.accessToken,
     });
-    console.log({ result });
 
     redirect('/');
   } else {
