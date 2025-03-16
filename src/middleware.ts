@@ -13,5 +13,8 @@ export async function middleware(request: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ['/my-profile/:path*', '/checkout/:path*'],
+  matcher: [
+    // '/my-profile/:path*',
+    '/checkout/:path*',
+  ],
 };

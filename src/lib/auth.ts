@@ -55,18 +55,15 @@ export async function signIn(state: FormState, formData: FormData): Promise<Form
     body: JSON.stringify(validateFields.data),
   });
 
-  console.log(response);
-
   if (response.ok === true) {
     const result = await response.json();
     // TODO: Create The Session For Authenticated User.
-
     await createSession({
       user: {
         id: result.id,
         account: result.account,
       },
-      accessToken: result.accessToken,
+      accessToken: result.access_token,
     });
 
     redirect('/');
